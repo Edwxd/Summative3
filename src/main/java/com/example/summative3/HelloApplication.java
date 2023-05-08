@@ -30,11 +30,12 @@ public class HelloApplication extends Application {
 
 
         ListView<String>bookName = new ListView<String>();
-        bookName.setPrefSize(100,100);
+        bookName.setPrefSize(200,200);
         File file = new File("BookPrices.txt");
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 
 
+        Label cart = new Label("Cart:");
         String line;
 
         ArrayList<bookInfo>bookInfo = new ArrayList<bookInfo>();
@@ -63,7 +64,7 @@ public class HelloApplication extends Application {
 
 
              ListView<String>shoppingCart = new ListView<String>();
-        shoppingCart.setPrefSize(100,100);
+        shoppingCart.setPrefSize(200,200);
 
 
         bookName.getSelectionModel().selectedIndexProperty().addListener(event ->{
@@ -79,39 +80,140 @@ public class HelloApplication extends Application {
         Button removeItem = new Button("Remove");
         Button checkOut =  new Button("Checkout");
 
+
+        Label subTotalTitle = new Label("Subtotal :");
+        Label subTotal = new Label();
+        Label totalTitle = new Label("Total :");
+        Label total = new Label();
+
         clearCart.setOnAction(event -> {
             shoppingCart.getItems().clear();
+            subTotal.setText("");
+            total.setText("");
 
         });
 
         removeItem.setOnAction(event -> {
             String selectedItem = shoppingCart.getSelectionModel().getSelectedItem();
-            shoppingCart.getItems().remove(selectedItem);
+
+
+            if(subTotal.getText() == ""){
+                shoppingCart.getItems().remove(selectedItem);
+
+
+
+            }else {
+
+                double price = Double.parseDouble(subTotal.getText());
+
+                    if ( selectedItem == bookName.getItems().get(0)) {
+
+                        shoppingCart.getItems().remove(selectedItem);
+                        price -= bookInfo.get(0).getPrice();
+
+
+                    } else if (selectedItem == bookName.getItems().get(1)) {
+
+                        shoppingCart.getItems().remove(selectedItem);
+                        price -= bookInfo.get(1).getPrice();
+
+
+                    } else if (selectedItem == bookName.getItems().get(2)) {
+
+                        shoppingCart.getItems().remove(selectedItem);
+                        price -= bookInfo.get(2).getPrice();
+
+
+                    } else if (selectedItem == bookName.getItems().get(3)) {
+
+                        shoppingCart.getItems().remove(selectedItem);
+                        price -= bookInfo.get(3).getPrice();
+
+
+                    } else if (selectedItem == bookName.getItems().get(4)) {
+
+                        shoppingCart.getItems().remove(selectedItem);
+                        price -= bookInfo.get(4).getPrice();
+
+
+                    } else if (selectedItem == bookName.getItems().get(5)) {
+
+                        shoppingCart.getItems().remove(selectedItem);
+                        price -= bookInfo.get(5).getPrice();
+
+
+                    } else if (selectedItem == bookName.getItems().get(6)) {
+
+                        shoppingCart.getItems().remove(selectedItem);
+                        price -= bookInfo.get(6).getPrice();
+
+                    }
+
+
+                subTotal.setText(String.valueOf(price));
+
+                double tax = price * 0.07;
+
+                total.setText(String.valueOf((price + tax)));
+                }
+
+
+
         });
 
         checkOut.setOnAction(event -> {
-            double price;
+            double price = 0;
 
             for (int i = 0; i < shoppingCart.getItems().size(); i++){
 
                 if(shoppingCart.getItems().get(i) == bookName.getItems().get(0)){
 
+                    price += bookInfo.get(0).getPrice();
+
+                }else if(shoppingCart.getItems().get(i) == bookName.getItems().get(1)){
+
+                    price += bookInfo.get(1).getPrice();
+
+                }else if(shoppingCart.getItems().get(i) == bookName.getItems().get(2)){
+
+                    price += bookInfo.get(2).getPrice();
+
+                }else if(shoppingCart.getItems().get(i) == bookName.getItems().get(3)){
+
+                    price += bookInfo.get(3).getPrice();
+
+                }else if(shoppingCart.getItems().get(i) == bookName.getItems().get(4)){
+
+                    price += bookInfo.get(4).getPrice();
+
+                }else if(shoppingCart.getItems().get(i) == bookName.getItems().get(5)){
+
+                    price += bookInfo.get(5).getPrice();
+
+                }else if(shoppingCart.getItems().get(i) == bookName.getItems().get(6)){
+
+                    price += bookInfo.get(6).getPrice();
 
                 }
             }
+
+            subTotal.setText(String.valueOf(price));
+
+            double tax = price * 0.07;
+
+            total.setText(String.valueOf((price + tax)));
+
+
+
         });
 
-        Label subTotalTitle = new Label("subtotal");
-        Label subTotal = new Label();
-        Label totalTitle = new Label("total");
-        Label total = new Label();
 
-        HBox tittleBox = new HBox(shoppingCartTittle);
-        tittleBox.setAlignment(Pos.CENTER);
-        borderPane.setTop(tittleBox);
 
-        VBox listViewBox = new VBox(bookName,shoppingCart);
-        borderPane.setBottom(listViewBox);
+
+
+        VBox listViewBox = new VBox(shoppingCartTittle,bookName,cart,shoppingCart);
+        borderPane.setRight(listViewBox);
+        listViewBox.setSpacing(5);
 
         VBox buttonBox = new VBox(clearCart,removeItem,checkOut);
         buttonBox.setSpacing(10);
@@ -119,7 +221,7 @@ public class HelloApplication extends Application {
 
         VBox totalBox = new VBox(subTotalTitle,subTotal,totalTitle,total);
         totalBox.setSpacing(10);
-        borderPane.setRight(totalBox);
+        borderPane.setBottom(totalBox);
 
         Scene scene = new Scene(borderPane, 300, 300);
         stage.setScene(scene);
